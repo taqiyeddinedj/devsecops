@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+      release: prometheus
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: webapp
+        release: prometheus
+    spec:
+      containers:
+      - name: webapp
+        image: taqiyeddinedj/devsecops:webapp-1.0 
+        imagePullPolicy: Always
+        ports:
+        - name: web
+          containerPort: 5000
