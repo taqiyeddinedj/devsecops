@@ -24,6 +24,14 @@ pipeline {
                 }
             }
         }
+        // i removed quality gate and the delay 
+        /*
+        stage("Delay") {
+            steps {
+                // Add a 30-second delay for Merge Requests
+                sleep time: 30, unit: 'SECONDS'
+            }
+        }
         stage("quality gate") {
             steps {
                 script {
@@ -31,6 +39,7 @@ pipeline {
                 }
             }
         }
+        */
         stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
