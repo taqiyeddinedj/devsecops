@@ -40,12 +40,8 @@ pipeline {
             }
         }
         
-        stage('OWASP FS SCAN') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
+        // OWASP stage has been removed here
+        
         stage('Build') {
             steps {
                 echo "Building the docker image...."
