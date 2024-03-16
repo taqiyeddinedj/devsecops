@@ -57,6 +57,11 @@ pipeline {
                 sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
             }
         }
+        stage('Continious Developement with ArgoCD') {
+            script {
+                kubernetesDeploy(configs: "appliction.yaml", kubeconfigId: "kubernetes")
+        }
+        }
 }
     post {
      always {
