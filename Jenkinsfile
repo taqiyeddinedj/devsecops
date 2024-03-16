@@ -57,13 +57,16 @@ pipeline {
                 sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
             }
         }
-        stage('Continious Developement with ArgoCD') {
+        stage('Deploy to kubernetes using ArgoCD'){
             steps{
-                script {
-                kubernetesDeploy(configs: "appliction.yaml", kubeconfigId: "kubernetes")
+                script{
+                    dir('Kubernetes') {
+                        withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'kubernetes', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                                sh 'kubectl apply -f application.yaml'
+                        }   
                     }
-            }       
-        }
+                }
+            }
 }
     post {
      always {
