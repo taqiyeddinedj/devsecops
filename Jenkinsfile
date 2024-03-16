@@ -13,15 +13,55 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/taqiyeddinedj/devsecops.git'
             }
         }
+        stage("Sonarqube Analysis") {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=devsecops \
+                    -Dsonar.projectKey=devsecops \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://10.231.10.19:9000 \
+                    -Dsonar.login=sqp_6d30916e2ff8083c6dd9846fb93f0300f17e2c99'''
+                }
+            }
+        }
+        stage("quality gate") {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                }
+            }
+        }
+        stage('OWASP FS SCAN') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building the docker image...."
-                withCredentials([usernamePassword(credentialsId:'dockr-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+                withCredentials([usernamePassword(credentialsId:'docker-token', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                     sh "docker build -t taqiyeddinedj/devsecops:webapp-1.0 ."
                     sh " echo $PASS | docker login -u $USER --password-stdin"
                     sh "docker push taqiyeddinedj/devsecops:webapp-1.0 ."
             }
         }
     }
+        stage('Trivy') {
+            steps{
+                sh 'trivy image taqiyeddinedj/devsecops:webapp-1. > trivyResult.txt'
+            }
+        }
 }
+    post {
+     always {
+        emailext attachLog: true,
+            subject: "'${currentBuild.result}'",
+            body: "Project: ${env.JOB_NAME}<br/>" +
+                "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                "URL: ${env.BUILD_URL}<br/>",
+            to: 'touk.shurrle@gmail.com',
+            attachmentsPattern: 'trivyimage.txt'
+        }
+    }
 }
