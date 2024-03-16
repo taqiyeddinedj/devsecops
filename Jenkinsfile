@@ -58,9 +58,11 @@ pipeline {
             }
         }
         stage('Continious Developement with ArgoCD') {
-            script {
+            steps{
+                script {
                 kubernetesDeploy(configs: "appliction.yaml", kubeconfigId: "kubernetes")
-        }
+                    }
+            }       
         }
 }
     post {
