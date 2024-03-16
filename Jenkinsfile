@@ -48,7 +48,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId:'docker-token', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                     sh "docker build -t taqiyeddinedj/devsecops:webapp-1.0 ."
                     sh " echo $PASS | docker login -u $USER --password-stdin"
-                    sh "docker push taqiyeddinedj/devsecops:webapp-1.0 ."
+                    sh "docker push taqiyeddinedj/devsecops:webapp-1.0"
             }
         }
     }
