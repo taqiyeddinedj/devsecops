@@ -59,12 +59,8 @@ pipeline {
         }
         stage('Deploy to kubernetes using ArgoCD'){
             steps{
-                script{
-                    dir('Kubernetes') {
-                        withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'kubernetes', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                                sh 'kubectl apply -f application.yaml'
-                        }   
-                    }
+                withKubeConfig(caCertificate: '', clusterName: 'default', contextName: '', credentialsId: 'k8s-cred', namespace: 'devsecops', restrictKubeConfigAccess: false, serverUrl: 'https://10.231.10.16:6443') {
+                        sh "kubectl apply -f application.yaml"
                 }
             }
 }
