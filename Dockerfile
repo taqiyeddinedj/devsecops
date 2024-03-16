@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Copy the source code and initialize the Go module
 COPY . .
-RUN go mod init your-module-path
+#RUN go mod init your-module-path
 
 # Download dependencies
 RUN go mod tidy
