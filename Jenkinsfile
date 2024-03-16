@@ -54,7 +54,7 @@ pipeline {
     }
         stage('Trivy') {
             steps{
-                sh 'trivy image taqiyeddinedj/devsecops:webapp-1. > trivyResult.txt'
+                sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
             }
         }
 }
