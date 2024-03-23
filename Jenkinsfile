@@ -46,20 +46,25 @@ pipeline {
             steps {
                 echo "Building the docker image...."
                 withCredentials([usernamePassword(credentialsId:'docker-token', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                    sh "docker build -t taqiyeddinedj/devsecops:webapp-1.0 ."
+                    //sh "docker build -t taqiyeddinedj/devsecops:webapp-1.0 ."
+                    //sh " echo $PASS | docker login -u $USER --password-stdin"
+                    //sh "docker push taqiyeddinedj/devsecops:webapp-1.0"
+                    sh "docker build -t taqiyeddinedj/devsecops:${BUILD_NUMBER} ."
                     sh " echo $PASS | docker login -u $USER --password-stdin"
-                    sh "docker push taqiyeddinedj/devsecops:webapp-1.0"
+                    sh "docker push taqiyeddinedj/devsecops:${BUILD_NUMBER}"
             }
         }
     }
         stage('Trivy') {
             steps{
-                sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
+                //sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
+                sh "trivy image taqiyeddinedj/devsecops:${BUILD_NUMBER} > trivyResult.txt"
             }
         }
         stage('Deploy to kubernetes using ArgoCD'){
             steps{
                 withKubeConfig(caCertificate: '', clusterName: 'default', contextName: '', credentialsId: 'k8s-cred', namespace: 'devsecops', restrictKubeConfigAccess: false, serverUrl: 'https://10.231.10.16:6443') {
+                        sh "sed -i 's|taqiyeddinedj/devsecops:webapp-1.0|taqiyeddinedj/devsecops:${BUILD_NUMBER}|g' application.yaml"
                         sh "kubectl apply -f application.yaml"
                 }
             }
