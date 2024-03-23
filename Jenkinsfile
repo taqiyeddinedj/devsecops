@@ -58,7 +58,7 @@ pipeline {
         stage('Trivy') {
             steps{
                 //sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
-                sh "trivy image taqiyeddinedj/devsecops:wepapp-${BUILD_NUMBER} > trivyResult.txt"
+                sh "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER} > trivyResult.txt"
             }
         }
         stage('Update Git Repository') {
@@ -67,7 +67,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/taqiyeddinedj/devsecops.git'
 
                 // Replace the image tag in the Kubernetes manifest files
-                sh "sed -i 's|taqiyeddinedj/devsecops:.*|taqiyeddinedj/devsecops:wepapp-${BUILD_NUMBER}|g' manifests/deploy.yaml"
+                sh "sed -i 's|taqiyeddinedj/devsecops:.*|taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER}|g' manifests/deploy.yaml"
 
                 // Add, commit, and push the changes to the Git repository
                 withCredentials([usernamePassword(credentialsId: 'github-token', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
