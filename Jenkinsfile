@@ -79,6 +79,7 @@ pipeline {
                         git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/taqiyeddinedj/devsecops.git main
                     """
                 }
+                sh "git pull origin main"
             }
 }
         stage('Deploy to kubernetes using ArgoCD'){
