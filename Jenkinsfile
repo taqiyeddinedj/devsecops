@@ -49,16 +49,16 @@ pipeline {
                     //sh "docker build -t taqiyeddinedj/devsecops:webapp-1.0 ."
                     //sh " echo $PASS | docker login -u $USER --password-stdin"
                     //sh "docker push taqiyeddinedj/devsecops:webapp-1.0"
-                    sh "docker build -t taqiyeddinedj/devsecops:${BUILD_NUMBER} ."
+                    sh "docker build -t taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER} ."
                     sh " echo $PASS | docker login -u $USER --password-stdin"
-                    sh "docker push taqiyeddinedj/devsecops:${BUILD_NUMBER}"
+                    sh "docker push taqiyeddinedj/devsecops:wepapp-${BUILD_NUMBER}"
             }
         }
     }
         stage('Trivy') {
             steps{
                 //sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
-                sh "trivy image taqiyeddinedj/devsecops:${BUILD_NUMBER} > trivyResult.txt"
+                sh "trivy image taqiyeddinedj/devsecops:wepapp-${BUILD_NUMBER} > trivyResult.txt"
             }
         }
         stage('Update Git Repository') {
@@ -67,12 +67,12 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/taqiyeddinedj/devsecops.git'
 
                 // Replace the image tag in the Kubernetes manifest files
-                sh "sed -i 's|taqiyeddinedj/devsecops:webapp-1.0|taqiyeddinedj/devsecops:${BUILD_NUMBER}|g' manifests/deploy.yaml"
+                sh "sed -i 's|taqiyeddinedj/devsecops:.*|taqiyeddinedj/devsecops:wepapp-${BUILD_NUMBER}|g' manifests/deploy.yaml"
 
                 // Add, commit, and push the changes to the Git repository
                 withCredentials([usernamePassword(credentialsId: 'github-token', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     sh """
-                        git config --global user.email "${GIT_USERNAME}@gmail.com"
+                        git config --global user.email "djouani.taqiyeddine@gmail.com"
                         git config --global user.name "${GIT_USERNAME}"
                         git add manifests/deploy.yaml
                         git commit -m "Update image tag to ${BUILD_NUMBER}"
