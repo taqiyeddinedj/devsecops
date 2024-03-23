@@ -58,7 +58,7 @@ pipeline {
         stage('Trivy') {
             steps{
                 //sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
-                sh "trivy image taqiyeddinedj/devsecops:${BUILD_NUMBER} > trivyResult.txt"
+                sh "trivy image taqiyeddinedj/devsecops:${BUILD_NUMBER} > /tmp/trivyResult.txt"
             }
         }
         stage('Update Git Repository') {
@@ -99,7 +99,7 @@ pipeline {
                     "Build Number: ${env.BUILD_NUMBER}<br/>" +
                     "URL: ${env.BUILD_URL}<br/>",
                 to: 'touk.shurrle@gmail.com',
-                attachmentsPattern: 'trivyimage.txt'
+                attachmentsPattern: '/tmp/trivyimage.txt'
             }
         }
 }
