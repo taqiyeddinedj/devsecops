@@ -64,7 +64,7 @@ pipeline {
         stage('Deploy to kubernetes using ArgoCD'){
             steps{
                 withKubeConfig(caCertificate: '', clusterName: 'default', contextName: '', credentialsId: 'k8s-cred', namespace: 'devsecops', restrictKubeConfigAccess: false, serverUrl: 'https://10.231.10.16:6443') {
-                        sh "sed -i 's|taqiyeddinedj/devsecops:webapp-1.0|taqiyeddinedj/devsecops:${BUILD_NUMBER}|g' deploy.yaml"
+                        sh "sed -i 's|taqiyeddinedj/devsecops:webapp-1.0|taqiyeddinedj/devsecops:${BUILD_NUMBER}|g' manifests/deploy.yaml"
                         sh "kubectl apply -f application.yaml"
                 }
             }
