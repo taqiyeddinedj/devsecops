@@ -89,7 +89,7 @@ pipeline {
                         sh "kubectl apply -f application.yaml"
                 }
             }
-}
+        }
 }
     post {
         always {
