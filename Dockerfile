@@ -23,7 +23,6 @@ FROM scratch
 # Copy the binary from the builder stage
 COPY --from=builder /app/myapp /myapp
 
-
 # Expose the port your application listens on
 EXPOSE 5000
 
