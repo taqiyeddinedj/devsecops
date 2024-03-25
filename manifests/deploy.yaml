@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: taqiyeddinedj/devsecops:webapp-109
+        image: taqiyeddinedj/devsecops:webapp-110
         imagePullPolicy: Always
         ports:
         - name: web
