@@ -23,6 +23,9 @@ FROM scratch
 # Copy the binary from the builder stage
 COPY --from=builder /app/myapp /myapp
 
+# Optionally, copy any other necessary files
+# COPY --from=builder /app/your-config.yaml /your-config.yaml
+
 # Expose the port your application listens on
 EXPOSE 5000
 
