@@ -31,11 +31,11 @@ func main() {
 	prometheus.MustRegister(requestDuration)
 
 	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
-		//start a timer
+		//start a timerSSS
 		start := time.Now()
 
 		time.Sleep(600 * time.Millisecond) //Sleep simulate work
-		fmt.Fprint(w, "Welcome to my application!, did you see the change, HELLO DSI !!!")
+		fmt.Fprint(w, "Welcome to my application!, did you see the change, HELLO DSI change one s !!!")
 	
 		//measure the duration and log to prometheus
 		httpDuration := time.Since(start)
