@@ -69,6 +69,11 @@ pipeline {
                         build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
                     }
                 }
+        stage('Check File') {
+            steps {
+                sh 'if [ ! -f trivyResult.txt ]; then echo "trivyResult.txt does not exist"; exit 1; fi'
+            }
+        }
 
     }
 
