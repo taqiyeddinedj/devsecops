@@ -58,11 +58,7 @@ pipeline {
         stage('Trivy') {
             steps{
                 //sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
-                //sh "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER} > trivyResult.txt"
-                script {
-                    def trivyOutput = sh(script: "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER}", returnStdout: true)
-                    writeFile file: 'trivyResult.txt', text: trivyOutput
-                }
+                sh "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER} > trivyResult.txt" 
             }
         }
         
