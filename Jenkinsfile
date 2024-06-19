@@ -81,7 +81,7 @@ pipeline {
                     "Build Number: ${env.BUILD_NUMBER}<br/>" +
                     "URL: ${env.BUILD_URL}<br/>",
                 to: 'touk.shurrle@gmail.com',
-                attachmentsPattern: 'trivyResult.txt'
+                attachmentsPattern: '**/trivyResult.txt'
         }
     }
 
