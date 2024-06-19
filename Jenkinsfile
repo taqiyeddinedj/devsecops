@@ -75,6 +75,7 @@ pipeline {
 
     post {
         always {
+            archiveArtifacts artifacts: 'trivyResult.txt'
             emailext attachLog: true,
                 subject: "'${currentBuild.result}'",
                 body: "Project: ${env.JOB_NAME}<br/>" +
