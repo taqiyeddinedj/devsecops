@@ -35,7 +35,7 @@ func main() {
 		start := time.Now()
 
 		time.Sleep(600 * time.Millisecond) //Sleep simulate work
-		fmt.Fprint(w, "Welcome to my application!, did you see the change!, another small change")
+		fmt.Fprint(w, "Welcome to my application!, did you see the change!")
 	
 		//measure the duration and log to prometheus
 		httpDuration := time.Since(start)
