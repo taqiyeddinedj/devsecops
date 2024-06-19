@@ -58,7 +58,11 @@ pipeline {
         stage('Trivy') {
             steps{
                 //sh 'trivy image taqiyeddinedj/devsecops:webapp-1.0 > trivyResult.txt'
-                sh "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER} > trivyResult.txt"
+                //sh "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER} > trivyResult.txt"
+                script {
+                    def trivyOutput = sh(script: "trivy image taqiyeddinedj/devsecops:webapp-${BUILD_NUMBER}", returnStdout: true)
+                    writeFile file: 'trivyResult.txt', text: trivyOutput
+                }
             }
         }
         
@@ -71,6 +75,7 @@ pipeline {
                 }
         stage('Check File') {
             steps {
+                sh 'ls -la'
                 sh 'if [ ! -f trivyResult.txt ]; then echo "trivyResult.txt does not exist"; exit 1; fi'
             }
         }
